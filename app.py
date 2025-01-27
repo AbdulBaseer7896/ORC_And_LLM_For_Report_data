@@ -4,6 +4,11 @@ from paddleocr import PaddleOCR
 import json
 from groq import Groq
 
+import json
+import re
+
+
+
 app = Flask(__name__)
 ocr = PaddleOCR()
 
@@ -23,53 +28,13 @@ def index():
     return render_template("index.html")
 
 
-# @app.route("/process", methods=["POST"])
-# def process_image():
-#     if "file" not in request.files:
-#         return "No file part"
-#     file = request.files["file"]
-#     if file.filename == "":
-#         return "No selected file"
-#     if file:
-#         file_path = os.path.join("uploads", file.filename)
-#         file.save(file_path)
+ocr = PaddleOCR(
+    use_gpu=False,  # Disable GPU usage
+    use_xpu=False,  # Disable XPU (if applicable)
+    use_npu=False,  # Disable NPU (if applicable)
+    use_mlu=False   # Disable MLU (if applicable)
+)
 
-#         # OCR the image
-#         result = ocr.ocr(file_path)
-#         extracted_text = "\n".join([line[1][0] for line in result[0]])
-
-#         # Use Groq API to process the text
-#         completion = groq_client.chat.completions.create(
-#             model="llama-3.3-70b-versatile",
-#             messages=[
-#                 {
-#                     "role": "user",
-#                     "content": (
-#                         f"Given the following medical test results, extract and return a JSON object containing only "
-#                         f"the following 13 tests and their results. "
-#                         f"If a test from this list is not present in the data, set its value to null. Ignore any tests "
-#                         f"that are not in this list. Tests to include: WBC Count RBC Count Haemoglobin Hematocnt MCV MCH "
-#                         f"MCHC Platelet Count Neutrophils Lymphocytes Monocytes Eosinophil Basophils Data: {extracted_text} "
-#                         f"Response: The response should be a JSON object containing only the specified 13 tests and their results, "
-#                         f"with null as the value for any missing tests."
-#                     ),
-#                 }
-#             ],
-#             temperature=1,
-#             max_completion_tokens=1024,
-#             top_p=1,
-#             stream=False,
-#         )
-
-#         # Extract the JSON response
-#         response_content = completion.choices[0].message.content.strip()
-#         response_json = json.loads(response_content)
-
-#         return render_template("result.html", data=response_json)
-
-
-import json
-import re
 
 @app.route("/process", methods=["POST"])
 def process_image():
