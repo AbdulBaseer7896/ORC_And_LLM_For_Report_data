@@ -20,7 +20,7 @@ groq_api_key = os.getenv('GROQ_API_KEY')
 
 # Groq API Key
 # api_key = "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"  # Replace with your actual Groq API key
-groq_client = Groq(api_key=groq_api_key)
+groq_client = Groq(api_key="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")
 
 
 @app.route("/")
